@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import roomRouter from './routes/roomRouter.js'
+import mongoose from 'mongoose'
 
 dotenv.config()
 
@@ -29,7 +30,14 @@ app.use((req, res) =>
 )
 
 const startServer = async () => {
-  app.listen(port, () => console.log(`server is listening on port ${port}`))
+  try {
+    await mongoose.connect(process.env.MONGO_CONNECT)
+    app.listen(port, () => {
+      console.log(`server is listening on port ${port}`)
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 startServer()
