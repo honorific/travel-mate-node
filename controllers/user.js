@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 export const register = async (req, res) => {
   try {
     const {name, email, password} = req.body
+    console.log('body request is :', req.body)
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
@@ -20,7 +21,7 @@ export const register = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    const user = user.create({
+    const user = User.create({
       name: req.name,
       email: emailLowerCase,
       password: hashedPassword,
