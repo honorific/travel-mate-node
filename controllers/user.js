@@ -67,7 +67,6 @@ export const updateProfile = tryCatch(async (req, res) => {
     new: true,
   })
   const {_id: id, name, photoURL} = updatedUser
-
   const token = jwt.sign({id, name, photoURL}, process.env.JWT_SECRET, {
     expiresIn: '1h',
   })
