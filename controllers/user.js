@@ -63,9 +63,10 @@ export const login = tryCatch(async (req, res) => {
 })
 
 export const updateProfile = tryCatch(async (req, res) => {
-  const updatedUser = User.findByIdAndUpdate(req.user.id, req.body, {new: true})
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+    new: true,
+  })
   const {_id: id, name, photoURL} = updatedUser
-
   const token = jwt.sign({id, name, photoURL}, process.env.JWT_SECRET, {
     expiresIn: '1h',
   })

@@ -1,5 +1,4 @@
 const tryCatch = (controller) => {
-  console.log('controller is: ', controller)
   return async (req, res) => {
     try {
       await controller(req, res)
