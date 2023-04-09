@@ -64,9 +64,13 @@ export const login = tryCatch(async (req, res) => {
 })
 
 export const updateProfile = tryCatch(async (req, res) => {
+  console.log('req.user is: ', req.user)
+  console.log('req body is: ', req.body)
   const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
   })
+
+  console.log('updatedUser is: ', updatedUser)
   const {_id: id, name, photoURL} = updatedUser
 
   await Room.updateMany({uid: id}, {uName: name, uPhoto: photoURL})
