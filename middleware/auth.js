@@ -23,8 +23,8 @@ const auth = async (req, res, next) => {
       const {id, name, photoURL} = decodedToken
       console.log('token is: ', token)
       console.log('decodedToken is: ', decodedToken)
-      //req.user = {id, name, photoURL}
-      req.user = decodedToken
+      req.user = {id, name, photoURL}
+      ///req.user = decodedToken
     }
     next()
   } catch (error) {
