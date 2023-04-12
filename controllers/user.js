@@ -22,16 +22,20 @@ export const register = tryCatch(async (req, res) => {
   }
   const hashedPassword = await bcrypt.hash(password, 12)
 
-  const user = User.create({
+  const user = await User.create({
     name,
     email: emailLowerCase,
     password: hashedPassword,
   })
 
+  console.log('user is: ', user)
+
   const {_id: id, photoURL} = user
   const token = jwt.sign({id, name, photoURL}, process.env.JWT_SECRET, {
     expiresIn: '1h',
   })
+  const decodedTokenn = jwt.verify(token, process.env.JWT_SECRET)
+  console.log('decoded tokennnnn in controller is: ', decodedTokenn)
   res.status(201).json({
     success: true,
     result: {id, name, email: user.email, photoURL, token},
