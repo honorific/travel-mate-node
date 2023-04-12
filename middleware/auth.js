@@ -5,7 +5,6 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 const auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
-    console.log('token from back is: ', token)
     const googleToken = token.length > 1000
     if (googleToken) {
       const ticket = await client.verifyIdToken({
@@ -22,7 +21,10 @@ const auth = async (req, res, next) => {
     } else {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
       const {id, name, photoURL} = decodedToken
+      console.log('token is: ', token)
+      console.log('decodedToken is: ', decodedToken)
       req.user = {id, name, photoURL}
+      ///req.user = decodedToken
     }
     next()
   } catch (error) {
