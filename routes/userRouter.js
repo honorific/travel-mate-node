@@ -7,12 +7,19 @@ import {
   updateStatus,
 } from '../controllers/user.js'
 import auth from '../middleware/auth.js'
+import checkAccess from '../middleware/permissions/checkAccess.js'
+import userPermissions from '../middleware/permissions/user/userPermissions.js'
 
 const userRouter = Router()
 userRouter.post('/register', register)
 userRouter.post('/login', login)
 userRouter.patch('/updateprofile', auth, updateProfile)
-userRouter.get('/', getUsers)
-userRouter.patch('/updatestatus/:userId', updateStatus)
+userRouter.get('/', auth, checkAccess(userPermissions.listUsers), getUsers)
+userRouter.patch(
+  '/updatestatus/:userId',
+  auth,
+  checkAccess(userPermissions.updateStatus),
+  updateStatus,
+)
 
 export default userRouter

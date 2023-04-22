@@ -31,7 +31,7 @@ export const register = tryCatch(async (req, res) => {
   console.log('user is: ', user)
 
   const {_id: id, photoURL, role, active} = user
-  const token = jwt.sign({id, name, photoURL}, process.env.JWT_SECRET, {
+  const token = jwt.sign({id, name, photoURL, role}, process.env.JWT_SECRET, {
     expiresIn: '1h',
   })
   const decodedTokenn = jwt.verify(token, process.env.JWT_SECRET)
@@ -63,7 +63,7 @@ export const login = tryCatch(async (req, res) => {
       success: false,
       message: 'this account has been suspended. try to contact the admin',
     })
-  const token = jwt.sign({id, name, photoURL}, process.env.JWT_SECRET, {
+  const token = jwt.sign({id, name, photoURL, role}, process.env.JWT_SECRET, {
     expiresIn: '1h',
   })
   res.status(200).json({
@@ -73,18 +73,19 @@ export const login = tryCatch(async (req, res) => {
 })
 
 export const updateProfile = tryCatch(async (req, res) => {
-  console.log('req.user is: ', req.user)
-  console.log('req body is: ', req.body)
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+  const fields = req.body?.photoURL
+    ? {name: req.body.name, photoURL: req.body.photoURL}
+    : {name: req.body.name}
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, fields, {
     new: true,
   })
 
   console.log('updatedUser is: ', updatedUser)
-  const {_id: id, name, photoURL} = updatedUser
+  const {_id: id, name, photoURL, role} = updatedUser
 
   await Room.updateMany({uid: id}, {uName: name, uPhoto: photoURL})
 
-  const token = jwt.sign({id, name, photoURL}, process.env.JWT_SECRET, {
+  const token = jwt.sign({id, name, photoURL, role}, process.env.JWT_SECRET, {
     expiresIn: '1h',
   })
 
